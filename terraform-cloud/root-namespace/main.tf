@@ -33,11 +33,11 @@ module "tst" {
   quota_rate_limit  = 202
 }
 
-module "prd" {
-  source            = "./modules/namespace"
-  namespace         = "prd"
-  description       = "prd namespace"
-  admin_group_name  = "vault-prd-admin"
-  quota_lease_count = 301
-  quota_rate_limit  = 302
-}
+# module "prd" {
+#   source            = "./modules/namespace"
+#   namespace         = "prd"
+#   description       = "prd namespace"
+#   admin_group_name  = "vault-prd-admin"
+#   quota_lease_count = 301
+#   quota_rate_limit  = 302
+# }
