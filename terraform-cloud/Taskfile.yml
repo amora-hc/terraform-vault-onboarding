@@ -11,12 +11,15 @@ tasks:
     deps: ["prepare"]
     dir: ./bootstrap
     cmds:
+      - terraform init
       - terraform validate
+      - terraform plan
       - terraform apply
 
-  plan:
+  namespaces:
     deps: ["prepare"]
     dir: ./root-namespace
     cmds:
       - terraform init
+      - terraform validate
       - terraform plan
