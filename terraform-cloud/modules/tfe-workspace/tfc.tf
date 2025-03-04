@@ -61,8 +61,7 @@ resource "tfe_variable" "enable_vault_provider_auth" {
 }
 
 resource "tfe_variable" "tfc_vault_address" {
-  key = "TFC_VAULT_ADDR"
-  #value        = var.vault_address_tfc_agent
+  key          = "TFC_VAULT_ADDR"
   value        = var.vault_address
   category     = "env"
   workspace_id = tfe_workspace.default.id
@@ -82,7 +81,17 @@ resource "tfe_variable" "tfc_vault_auth_path" {
   workspace_id = tfe_workspace.default.id
 }
 
+resource "tfe_variable" "tfe_token" {
+  count        = var.tfc_token != null ? 1 : 0
+  key          = "TFE_TOKEN"
+  value        = var.tfc_token
+  category     = "env"
+  sensitive    = true
+  workspace_id = tfe_workspace.default.id
+}
+
 resource "tfe_variable" "okta_api_token" {
+  count        = var.okta_api_token != null ? 1 : 0
   key          = "OKTA_API_TOKEN"
   value        = var.okta_api_token
   category     = "env"
@@ -90,33 +99,14 @@ resource "tfe_variable" "okta_api_token" {
   workspace_id = tfe_workspace.default.id
 }
 
-resource "tfe_variable" "okta_org_name" {
-  key          = "okta_org_name"
-  value        = var.okta_org_name
+resource "tfe_variable" "default" {
+  for_each     = var.tfc_terraform_variables
+  key          = each.key
+  value        = each.value.value
+  sensitive    = each.value.sensitive
   category     = "terraform"
   workspace_id = tfe_workspace.default.id
 }
-
-resource "tfe_variable" "tfc_organization" {
-  key          = "tfc_organization"
-  value        = var.tfc_organization
-  category     = "terraform"
-  workspace_id = tfe_workspace.default.id
-}
-
-resource "tfe_variable" "tfc_project" {
-  key          = "tfc_project"
-  value        = var.tfc_project
-  category     = "terraform"
-  workspace_id = tfe_workspace.default.id
-}
-
-# resource "tfe_variable" "vault_auth_path" {
-#   key          = "vault_auth_path"
-#   value        = var.vault_auth_path
-#   category     = "terraform"
-#   workspace_id    = tfe_workspace.default.id
-# }
 
 resource "tfe_workspace_settings" "agent_pool" {
   count          = var.enable_tfc_agent_pool ? 1 : 0

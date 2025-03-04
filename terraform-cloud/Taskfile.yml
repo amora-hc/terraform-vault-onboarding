@@ -17,8 +17,8 @@ tasks:
 
   plan:
     deps: ["prepare"]
-    #dir: ./root-namespace
-    dir: ./baseline-configuration
+    dir: ./root-namespace
     cmds:
       - terraform init
       - terraform plan
+      

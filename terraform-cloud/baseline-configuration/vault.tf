@@ -89,5 +89,4 @@ resource "vault_jwt_auth_backend_role" "okta_group" {
 resource "vault_policy" "okta_vault_admin" {
   name   = "okta-vault-admin"
   policy = file("./${path.module}/../templates/okta_vault_admin_policy.hcl")
-  #policy = file("../templates/okta_vault_admin_policy.hcl")
 }

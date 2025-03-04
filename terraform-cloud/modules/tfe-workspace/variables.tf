@@ -32,18 +32,6 @@ variable "tfc_working_directory" {
   description = "Working directory for the TFC workspace."
 }
 
-variable "default_lease_ttl" {
-  type        = string
-  description = "Default lease TTL for Vault tokens"
-  default     = "10m"
-}
-
-variable "max_lease_ttl" {
-  type        = string
-  description = "Maximum lease TTL for Vault tokens"
-  default     = "30m"
-}
-
 variable "token_type" {
   type        = string
   description = "Token type for Vault tokens"
@@ -59,11 +47,6 @@ variable "vault_address" {
   type        = string
   description = "Vault API endpoint"
 }
-
-#variable "vault_address_tfc_agent" {
-#  type        = string
-#  description = "Vault API endpoint for TFC agent"
-#}
 
 variable "vault_auth_role" {
   type        = string
@@ -86,39 +69,10 @@ variable "okta_base_url" {
   default     = "okta.com"
 }
 
-
-# variable "okta_auth_path" {
-#   type    = string
-#   # default = "oidc"
-# }
-
-# variable "okta_users" {
-#   type = map(object({
-#     first_name = string
-#     last_name  = string
-#     password   = string
-#     groups     = list(string)
-#   }))
-#   default = {}
-# }
-
 variable "okta_api_token" {
   type        = string
   description = "Okta API token"
 }
-
-# variable "okta_mgmt_groups" {
-#   type = list(string)
-#   default = [
-#     "vault-admin",
-#     "vault-user"
-#   ]
-# }
-
-# variable "okta_namespace_groups" {
-#   type    = list(string)
-#   default = []
-# }
 
 variable "enable_tfc_agent_pool" {
   type    = bool
@@ -129,4 +83,19 @@ variable "terraform_version" {
   type        = string
   description = "Version of Terraform to use"
   default     = "~> 1.10.0"
+}
+
+variable "tfc_terraform_variables" {
+  type = map(object({
+    value     = string
+    sensitive = optional(bool, false)
+  }))
+  description = "Map of additional Terraform variables"
+  default     = {}
+}
+
+variable "tfc_token" {
+  type        = string
+  description = "TFC API token"
+  default     = null
 }

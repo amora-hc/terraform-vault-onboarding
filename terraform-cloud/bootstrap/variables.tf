@@ -25,18 +25,21 @@ variable "tfc_project" {
   default     = "default project"
 }
 
-variable "tfc_workspace" {
+variable "tfc_workspace_prefix" {
   type        = string
   description = "Name of the TFC workspace."
-  default     = "terraform-vault-onboarding-baseline-configuration"
-  #default = "terraform-vault-onboarding-bootstrap"
+  default     = "terraform-vault-onboarding"
 }
 
-variable "tfc_working_directory" {
+variable "tfc_working_directory_prefix" {
   type        = string
   description = "Working directory for the TFC workspace."
-  default     = "terraform-cloud/baseline-configuration"
-  #default = "terraform-cloud/bootstrap"
+  default     = "terraform-cloud"
+}
+
+variable "tfc_token" {
+  type        = string
+  description = "Terraform Cloud API token"
 }
 
 variable "default_lease_ttl" {
@@ -73,7 +76,7 @@ variable "vault_address_tfc_agent" {
   description = "Vault API endpoint for TFC agent"
 }
 
-variable "vault_auth_role" {
+variable "vault_auth_role_prefix" {
   type        = string
   description = "Vault role name"
   default     = "tfc-admin"
@@ -89,7 +92,6 @@ variable "okta_base_url" {
   description = "Okta base URL"
   default     = "okta.com"
 }
-
 
 variable "okta_auth_path" {
   type    = string
