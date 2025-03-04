@@ -1,7 +1,7 @@
 resource "vault_policy" "tfc_admin" {
   name = "tfc-admin"
   #  policy = data.vault_policy_document.tfc_admin.hcl
-  policy = file("${path.module}/../templates/tfc_admin_policy.hcl")
+  policy = file("${path.module}/../policies/tfc_admin_policy.hcl")
 }
 
 resource "vault_jwt_auth_backend" "tfc" {

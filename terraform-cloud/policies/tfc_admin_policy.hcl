@@ -101,6 +101,15 @@ path "+/identity" {
     capabilities = ["list"]
 }
 
+# Create and manage auth jwt mounts
+path "auth/jwt" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
+path "auth/jwt/*" {
+    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
+
 # Create and manage auth mounts
 path "auth/oidc" {
     capabilities = ["create", "read", "update", "delete", "list", "sudo"]

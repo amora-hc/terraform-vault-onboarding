@@ -8,9 +8,9 @@ variable "github_repository" {
   description = "Name of the GitHub repository."
 }
 
-variable "tfe_oauth_client" {
-  description = "TFE OAuth client"
-}
+#variable "tfe_oauth_client" {
+#  description = "TFE OAuth client"
+#}
 
 variable "tfc_organization" {
   type        = string

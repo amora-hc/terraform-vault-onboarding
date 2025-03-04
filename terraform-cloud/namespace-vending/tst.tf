@@ -1,13 +1,13 @@
-module "dev_namespace" {
+module "tst_namespace" {
   source            = "./../modules/namespace"
-  namespace         = "dev"
-  description       = "dev namespace"
-  admin_group_name  = "vault-dev-admin"
+  namespace         = "tst"
+  description       = "tst namespace"
+  admin_group_name  = "vault-tst-admin"
   quota_lease_count = 201
   quota_rate_limit  = 202
 }
 
-module "dev_workspace" {
+module "tst_workspace" {
   source                = "./../modules/tfe-workspace"
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization
@@ -15,12 +15,10 @@ module "dev_workspace" {
   okta_api_token        = var.okta_api_token
   okta_org_name         = var.okta_org_name
   okta_base_url         = var.okta_base_url
-  #tfe_oauth_client      = module.tfe_oauth_client.tfe_oauth_client
-  tfe_oauth_client      = data.terraform_remote_state.bootstrap.outputs.tfe_oauth_client.tfe_oauth_client
   tfc_organization      = var.tfc_organization
   tfc_project           = var.tfc_project
-  tfc_workspace         = "${var.tfc_workspace_prefix}-namespace-dev"
-  tfc_working_directory = "${var.tfc_working_directory_prefix}/namespace-dev"
+  tfc_workspace         = "${var.tfc_workspace_prefix}-namespace-tst"
+  tfc_working_directory = "${var.tfc_working_directory_prefix}/namespace-tst"
   tfc_terraform_variables = {
     "github_organization" = { value = var.github_organization }
     "github_repository"   = { value = var.github_repository }
@@ -35,6 +33,6 @@ module "dev_workspace" {
   }
   vault_address   = var.vault_address
   vault_auth_path = var.vault_auth_path
-  vault_auth_role = "tfc-admin-namespace-dev"
+  vault_auth_role = "tfc-admin-namespace-tst"
   vault_policy    = var.vault_policy
 }
