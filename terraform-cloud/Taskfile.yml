@@ -13,13 +13,12 @@ tasks:
     cmds:
       - terraform init
       - terraform validate
-      - terraform plan
       - terraform apply
 
-  namespaces:
+  plan:
     deps: ["prepare"]
-    dir: ./root-namespace
+    #dir: ./root-namespace
+    dir: ./baseline-configuration
     cmds:
       - terraform init
-      - terraform validate
       - terraform plan
