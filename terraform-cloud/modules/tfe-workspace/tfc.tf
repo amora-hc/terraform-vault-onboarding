@@ -61,8 +61,9 @@ resource "tfe_variable" "enable_vault_provider_auth" {
 }
 
 resource "tfe_variable" "tfc_vault_address" {
-  key          = "TFC_VAULT_ADDR"
-  value        = var.vault_address_tfc_agent
+  key = "TFC_VAULT_ADDR"
+  #value        = var.vault_address_tfc_agent
+  value        = var.vault_address
   category     = "env"
   workspace_id = tfe_workspace.default.id
 }
@@ -98,7 +99,7 @@ resource "tfe_variable" "okta_org_name" {
 
 resource "tfe_variable" "tfc_organization" {
   key          = "tfc_organization"
-  value        = var.tfc_project
+  value        = var.tfc_organization
   category     = "terraform"
   workspace_id = tfe_workspace.default.id
 }

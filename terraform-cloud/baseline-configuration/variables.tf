@@ -11,12 +11,14 @@
 variable "tfc_organization" {
   type        = string
   description = "Name of the TFC organization."
+  default     = "amora-hc" ##delete
 }
 
 variable "tfc_project" {
   type        = string
   description = "Name of the TFC project."
   # default     = "default project"
+  default      = "vault-onboarding" #delete
 }
 
 variable "tfc_workspace" {
@@ -67,6 +69,7 @@ variable "vault_role" {
 variable "okta_org_name" {
   type        = string
   description = "Okta organization name"
+  default    = "dev-45037966" #delete
 }
 
 variable "okta_base_url" {
@@ -113,3 +116,11 @@ variable "okta_mgmt_groups" {
 #   type    = bool
 #   default = false
 # }
+
+variable "vault_token" { #delete
+   type    = string
+}
+
+variable "okta_api_token" { #delete
+   type    = string
+}

@@ -55,15 +55,15 @@ variable "vault_auth_path" {
   description = "Mount path where JWT Auth will be configured"
 }
 
-# variable "vault_address" {
-#   type        = string
-#   description = "Vault API endpoint"
-# }
-
-variable "vault_address_tfc_agent" {
+variable "vault_address" {
   type        = string
-  description = "Vault API endpoint for TFC agent"
+  description = "Vault API endpoint"
 }
+
+#variable "vault_address_tfc_agent" {
+#  type        = string
+#  description = "Vault API endpoint for TFC agent"
+#}
 
 variable "vault_auth_role" {
   type        = string
