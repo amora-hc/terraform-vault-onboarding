@@ -3,7 +3,7 @@
 #  cloud {
 #    organization = "amora-hc"
 #    workspaces {
-#      name    = "terraform-vault-onboarding-namespace-root"
+#      name    = "terraform-vault-onboarding-namespace-prd"
 #      project = "vault-onboarding"
 #    }
 #  }

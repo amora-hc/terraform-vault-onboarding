@@ -6,6 +6,7 @@ variable "github_organization" {
 variable "github_repository" {
   type        = string
   description = "Name of the GitHub repository."
+  default     = "terraform-vault-onboarding"
 }
 
 variable "tfc_organization" {
@@ -54,11 +55,13 @@ variable "vault_address" {
 variable "vault_auth_path" {
   type        = string
   description = "Mount path where JWT Auth will be configured"
+  default     = "jwt/tfc"
 }
 
 variable "vault_policy" {
   type        = string
   description = "Vault policy name"
+  default     = "tfc-admin"
 }
 
 variable "enable_tfc_agent_pool" {
