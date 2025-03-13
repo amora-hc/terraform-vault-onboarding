@@ -1,4 +1,4 @@
 resource "vault_identity_group" "dev" {
-  name = "dev"
+  name = "dev-group"
   type = "internal"
 }

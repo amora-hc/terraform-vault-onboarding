@@ -25,7 +25,7 @@ data "okta_group" "namespace_admin" {
   name = var.admin_group_name
 }
 data "vault_auth_backend" "okta" {
-  path = "oidc"
+  path = var.okta_auth_path
 }
 
 resource "vault_identity_group" "namespace_admin_external" {
@@ -42,7 +42,7 @@ resource "vault_identity_group_alias" "namespace_admin_external" {
 resource "vault_policy" "namespace_admin" {
   namespace = vault_namespace.default.path
   name      = "namespace-admin"
-  policy    = file("./${path.module}/../../policies/tfc_namespace_policy.hcl")
+  policy    = file("./${path.module}/../../policies/namespace_admin_policy.hcl")
 }
 
 resource "vault_identity_group" "namespace_admin_internal" {
