@@ -1,0 +1,17 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  prepare:
+    cmds:
+      - terraform fmt -recursive
+
+  bootstrap:
+    deps: ["prepare"]
+    dir: ./bootstrap
+    cmds:
+      - terraform init
+      - terraform validate
+      - terraform apply
+      
