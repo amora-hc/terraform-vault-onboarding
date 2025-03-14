@@ -1,4 +1,4 @@
 resource "vault_identity_group" "tst" {
-  name = "tst"
+  name = "tst-group"
   type = "internal"
 }

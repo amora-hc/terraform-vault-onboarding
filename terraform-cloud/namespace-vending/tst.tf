@@ -20,19 +20,11 @@ module "tst_workspace" {
   tfc_workspace         = "${var.tfc_workspace_prefix}-namespace-tst"
   tfc_working_directory = "${var.tfc_working_directory_prefix}/namespace-tst"
   tfc_terraform_variables = {
-    "github_organization" = { value = var.github_organization }
-    "github_repository"   = { value = var.github_repository }
-    "okta_api_token"      = { value = var.okta_api_token, sensitive = true }
-    "okta_org_name"       = { value = var.okta_org_name }
-    "okta_base_url"       = { value = var.okta_base_url }
-    "tfc_organization"    = { value = var.tfc_organization }
-    "tfc_project"         = { value = var.tfc_project }
-    "vault_address"       = { value = var.vault_address }
-    "vault_auth_path"     = { value = var.vault_auth_path }
-    "vault_policy"        = { value = var.vault_policy }
+    "okta_org_name" = { value = var.okta_org_name }
+    "okta_base_url" = { value = var.okta_base_url }
   }
   vault_address   = var.vault_address
   vault_auth_path = var.vault_auth_path
-  vault_auth_role = "tfc-admin-namespace-tst"
-  vault_policy    = var.vault_policy
+  vault_auth_role = var.vault_auth_role #"tfc-admin-namespace-tst"
+  vault_namespace = module.tst_namespace.namespace
 }

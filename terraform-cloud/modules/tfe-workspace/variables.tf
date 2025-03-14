@@ -32,10 +32,22 @@ variable "tfc_working_directory" {
   description = "Working directory for the TFC workspace."
 }
 
+variable "token_ttl" {
+  type        = string
+  description = "Default lease TTL for Vault tokens"
+  default     = 300 # 5 minutes
+}
+
+variable "token_max_ttl" {
+  type        = string
+  description = "Maximum lease TTL for Vault tokens"
+  default     = 600 # 10 minutes
+}
+
 variable "token_type" {
   type        = string
   description = "Token type for Vault tokens"
-  default     = "default-service"
+  default     = "service"
 }
 
 variable "vault_auth_path" {
@@ -53,9 +65,22 @@ variable "vault_auth_role" {
   description = "Vault role name"
 }
 
-variable "vault_policy" {
+variable "vault_namespace" {
+  type        = string
+  description = "Vault namespace"
+  default     = null
+}
+
+variable "vault_policy_name" {
   type        = string
   description = "Vault policy name"
+  default     = "tfc-namespace-admin"
+}
+
+variable "vault_token_type" {
+  type        = string
+  description = "Token type for Vault tokens"
+  default     = "service"
 }
 
 variable "okta_org_name" {
@@ -82,7 +107,7 @@ variable "enable_tfc_agent_pool" {
 variable "terraform_version" {
   type        = string
   description = "Version of Terraform to use"
-  default     = "~> 1.10.0"
+  default     = "~> 1.11.0"
 }
 
 variable "tfc_terraform_variables" {
@@ -98,4 +123,16 @@ variable "tfc_token" {
   type        = string
   description = "TFC API token"
   default     = null
+}
+
+variable "vault_default_lease_ttl" {
+  type        = string
+  description = "Default lease TTL for Vault tokens"
+  default     = "10m"
+}
+
+variable "vault_max_lease_ttl" {
+  type        = string
+  description = "Maximum lease TTL for Vault tokens"
+  default     = "30m"
 }
