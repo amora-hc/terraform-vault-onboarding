@@ -8,6 +8,10 @@ variable "github_repository" {
   description = "Name of the GitHub repository."
 }
 
+variable "github_oauth_token" {
+  type        = string
+  description = "Github apps personal access token"
+}
 #variable "tfe_oauth_client" {
 #  description = "TFE OAuth client"
 #}
