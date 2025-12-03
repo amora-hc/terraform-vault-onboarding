@@ -35,6 +35,12 @@ variable "tfc_working_directory_prefix" {
   default     = "terraform-cloud"
 }
 
+variable "create_okta_resources" {
+  type        = bool
+  default     = false
+  description = "Whether to create Okta-related variables and resources"
+}
+
 variable "okta_api_token" {
   type        = string
   description = "Okta API token"

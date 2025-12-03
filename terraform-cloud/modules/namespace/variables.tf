@@ -20,6 +20,12 @@ variable "quota_rate_limit" {
   default = 100
 }
 
+variable "create_okta_resources" {
+  type        = bool
+  default     = false
+  description = "Whether to create Okta-related variables and resources"
+}
+
 variable "okta_auth_path" {
   type    = string
   default = "oidc"

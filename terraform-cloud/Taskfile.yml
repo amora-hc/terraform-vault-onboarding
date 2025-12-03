@@ -19,58 +19,97 @@ tasks:
   #1. switch TFE workspaces to "local"
   #2. uncomment backend.tf files for each `namespace-*`
   #3. add providers.tf to `namespace-dev, tst and prd`
-  destroy:
-    cmds:
-      - task: destroy_namespace_prd
-      - task: destroy_namespace_tst
-      - task: destroy_namespace_dev
-      - task: destroy_namespace_vending
-      - task: destroy_namespace_root
-      - task: destroy_bootstrap
+  #destroy:
+  #  cmds:
+  #    - task: destroy_namespace_prd
+  #    - task: destroy_namespace_tst
+  #    - task: destroy_namespace_dev
+  #    - task: destroy_namespace_vending
+  #    - task: destroy_namespace_root
+  #    - task: destroy_bootstrap
 
-  destroy_namespace_prd:
-    deps: ["prepare"]
-    dir: ./namespace-prd
-    cmds:
-      - terraform init
+  #destroy_namespace_prd:
+  #  deps: ["prepare"]
+  #  dir: ./namespace-prd
+  #  cmds:
+  #    - terraform init
       #- TF_LOG=DEBUG TF_VAULT_NAMESPACE=prd terraform destroy
       #- export VAULT_NAMESPACE=prd && terraform destroy
       #- TF_VAR_vault_namespace=prd terraform destroy
       #- terraform destroy -var="vault_namespace=prd"
-      - terraform destroy
+  #    - terraform destroy
 
-  destroy_namespace_tst:
-    deps: ["prepare"]
-    dir: ./namespace-tst
-    cmds:
-      - terraform init
-      - terraform destroy
+  #destroy_namespace_tst:
+  #  deps: ["prepare"]
+  #  dir: ./namespace-tst
+  #  cmds:
+  #    - terraform init
+  #    - terraform destroy
 
-  destroy_namespace_dev:
-    deps: ["prepare"]
-    dir: ./namespace-dev
-    cmds:
-      - terraform init
-      - terraform destroy
+  #destroy_namespace_dev:
+  #  deps: ["prepare"]
+  #  dir: ./namespace-dev
+  #  cmds:
+  #    - terraform init
+  #    - terraform destroy
 
-  destroy_namespace_vending:
-    deps: ["prepare"]
-    dir: ./namespace-vending
-    cmds:
-      - terraform init
-      - terraform destroy
+  #destroy_namespace_vending:
+  #  deps: ["prepare"]
+  #  dir: ./namespace-vending
+  #  cmds:
+  #    - terraform init
+  #    - terraform destroy
 
-  destroy_namespace_root:
-    deps: ["prepare"]
-    dir: ./namespace-root
-    cmds:
-      - terraform init
-      - terraform destroy
+  #destroy_namespace_root:
+  #  deps: ["prepare"]
+  #  dir: ./namespace-root
+  #  cmds:
+  #    - terraform init
+  #    - terraform destroy
       
-  destroy_bootstrap:
+  #destroy_bootstrap:
+  #  deps: ["prepare"]
+  #  dir: ./bootstrap
+  #  cmds:
+  #    - terraform init
+  #    - terraform validate
+  #    - terraform destroy
+
+  destroy:
+    vars:
+      WORKSPACES:
+        - terraform-vault-onboarding-namespace-prd 
+        - terraform-vault-onboarding-namespace-tst
+        - terraform-vault-onboarding-namespace-dev 
+        - terraform-vault-onboarding-namespace-vending
+        - terraform-vault-onboarding-namespace-root
+      NAMESPACE_DIRS: [namespace-prd, namespace-tst, namespace-dev, namespace-vending, namespace-root, bootstrap]
+    cmds:
+      - for: {var: WORKSPACES}
+        task: switch_local_workspace
+        vars:
+          WORKSPACE_NAME: '{{.ITEM}}'
+          TFC_TOKEN: '{{.TFC_TOKEN}}'
+      - for: {var: NAMESPACE_DIRS}
+        task: destroy_workspace
+        vars:
+          DIR: '{{.ITEM}}'
+
+  switch_local_workspace:
+    desc: Set workspace execution mode to local for any workspace
+    cmds:
+      - bash ./scripts/hcp_switch_workspace.sh {{.WORKSPACE_NAME}} {{.TFC_TOKEN}}
+    vars:
+      WORKSPACE_NAME: '{{.WORKSPACE_NAME}}'
+      TFC_TOKEN: '{{.TFC_TOKEN}}'
+    env:
+      TFC_TOKEN: '{{.TFC_TOKEN}}'
+
+  destroy_workspace:
+    desc: Destroy resources in a workspace
     deps: ["prepare"]
-    dir: ./bootstrap
+    dir: ./{{.DIR}}
     cmds:
       - terraform init
-      - terraform validate
       - terraform destroy
+ 

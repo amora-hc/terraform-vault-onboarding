@@ -1,4 +1,4 @@
-#provider "vault" {
-#  #  skip_child_token = true
-#  namespace = "prd"
-#}
+provider "vault" {
+  #  skip_child_token = true
+  namespace = "prd"
+}

@@ -88,6 +88,12 @@ variable "vault_policy" {
   default     = "tfc-admin"
 }
 
+variable "create_okta_resources" {
+  type        = bool
+  default     = false
+  description = "Whether to create Okta-related variables and resources"
+}
+
 variable "okta_org_name" {
   type        = string
   description = "Okta organization name"

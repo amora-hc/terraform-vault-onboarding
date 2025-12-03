@@ -1,10 +1,11 @@
 module "dev_namespace" {
-  source            = "./../modules/namespace"
-  namespace         = "dev"
-  description       = "dev namespace"
-  admin_group_name  = "vault-dev-admin"
-  quota_lease_count = 201
-  quota_rate_limit  = 202
+  source                = "./../modules/namespace"
+  namespace             = "dev"
+  description           = "dev namespace"
+  admin_group_name      = "vault-dev-admin"
+  quota_lease_count     = 201
+  quota_rate_limit      = 202
+  create_okta_resources = var.create_okta_resources
 }
 
 module "dev_workspace" {

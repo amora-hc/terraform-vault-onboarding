@@ -1,12 +1,36 @@
 locals {
   # Fetch okta user ids for each group
-  vault_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-admin")]
-  vault_user_member_ids  = [for user in okta_user.default : user.id]
+  #vault_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-admin")]
+  vault_admin_member_ids = var.create_okta_resources ? [
+    for k, v in var.okta_users :
+    okta_user.default[k].id
+    if contains(v.groups, "vault-admin")
+  ] : []
+
+  #vault_user_member_ids = [for user in okta_user.default : user.id]
+  vault_user_member_ids = var.create_okta_resources ? [
+    for user in okta_user.default : user.id
+  ] : []
 
   #TODO: Refactor to get the member ids for the group memberships
-  vault_dev_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-dev-admin")]
-  vault_tst_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-tst-admin")]
-  vault_prd_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-prd-admin")]
+  #vault_dev_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-dev-admin")]
+  vault_dev_admin_member_ids = var.create_okta_resources ? [
+    for k, v in var.okta_users :
+    okta_user.default[k].id
+    if contains(v.groups, "vault-dev-admin")
+  ] : []
+  #vault_tst_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-tst-admin")]
+  vault_tst_admin_member_ids = var.create_okta_resources ? [
+    for k, v in var.okta_users :
+    okta_user.default[k].id
+    if contains(v.groups, "vault-tst-admin")
+  ] : []
+  #vault_prd_admin_member_ids = [for k, v in var.okta_users : okta_user.default[k].id if contains(v.groups, "vault-prd-admin")]
+  vault_prd_admin_member_ids = var.create_okta_resources ? [
+    for k, v in var.okta_users :
+    okta_user.default[k].id
+    if contains(v.groups, "vault-prd-admin")
+  ] : []
 
   # Fetch okta group ids
   #  okta_group_ids = [for group in okta_group.default : group.id]
@@ -15,19 +39,22 @@ locals {
 
 # Create okta mgmt groups
 resource "okta_group" "mgmt" {
-  for_each = toset(var.okta_mgmt_groups)
+  #for_each = toset(var.okta_mgmt_groups)
+  for_each = var.create_okta_resources ? toset(var.okta_mgmt_groups) : toset([])
   name     = each.value
 }
 
 # Create okta namespace groups
 resource "okta_group" "namespace" {
-  for_each = toset(var.okta_namespace_groups)
+  #for_each = toset(var.okta_namespace_groups)
+  for_each = var.create_okta_resources ? toset(var.okta_namespace_groups) : toset([])
   name     = each.value
 }
 
 # Create okta users
 resource "okta_user" "default" {
-  for_each   = var.okta_users
+  #for_each   = var.okta_users
+  for_each   = var.create_okta_resources ? var.okta_users : {}
   email      = each.key
   first_name = each.value.first_name
   last_name  = each.value.last_name
@@ -37,32 +64,38 @@ resource "okta_user" "default" {
 
 # Create group memberships
 resource "okta_group_memberships" "vault_admin" {
+  count    = var.create_okta_resources ? 1 : 0
   group_id = okta_group.mgmt["vault-admin"].id
   users    = local.vault_admin_member_ids
 }
 
 # Add each user to vault-user group for okta app assignment
 resource "okta_group_memberships" "vault_user" {
+  count    = var.create_okta_resources ? 1 : 0
   group_id = okta_group.mgmt["vault-user"].id
   users    = local.vault_user_member_ids
 }
 
 resource "okta_group_memberships" "vault_dev_admin" {
+  count    = var.create_okta_resources ? 1 : 0
   group_id = okta_group.namespace["vault-dev-admin"].id
   users    = local.vault_dev_admin_member_ids
 }
 
 resource "okta_group_memberships" "vault_tst_admin" {
+  count    = var.create_okta_resources ? 1 : 0
   group_id = okta_group.namespace["vault-tst-admin"].id
   users    = local.vault_tst_admin_member_ids
 }
 
 resource "okta_group_memberships" "vault_prd_admin" {
+  count    = var.create_okta_resources ? 1 : 0
   group_id = okta_group.namespace["vault-prd-admin"].id
   users    = local.vault_prd_admin_member_ids
 }
 
 resource "okta_auth_server" "default" {
+  count       = var.create_okta_resources ? 1 : 0
   audiences   = ["api://vault"]
   description = "Vault Authorization Server"
   name        = "vault"
@@ -71,7 +104,8 @@ resource "okta_auth_server" "default" {
 }
 
 resource "okta_auth_server_claim" "default" {
-  auth_server_id          = okta_auth_server.default.id
+  count                   = var.create_okta_resources ? 1 : 0
+  auth_server_id          = okta_auth_server.default[0].id
   name                    = "groups"
   value                   = "vault-"
   value_type              = "GROUPS"
@@ -82,18 +116,20 @@ resource "okta_auth_server_claim" "default" {
 }
 
 resource "okta_auth_server_policy" "default" {
+  count            = var.create_okta_resources ? 1 : 0
   description      = "Policy for Authorization Server"
   name             = "vault"
-  auth_server_id   = okta_auth_server.default.id
+  auth_server_id   = okta_auth_server.default[0].id
   priority         = 1
-  client_whitelist = [okta_app_oauth.default.client_id]
+  client_whitelist = [okta_app_oauth.default[0].client_id]
   status           = "ACTIVE"
 }
 
 resource "okta_auth_server_policy_rule" "default" {
+  count           = var.create_okta_resources ? 1 : 0
   name            = "vault"
-  auth_server_id  = okta_auth_server.default.id
-  policy_id       = okta_auth_server_policy.default.id
+  auth_server_id  = okta_auth_server.default[0].id
+  policy_id       = okta_auth_server_policy.default[0].id
   priority        = 1
   group_whitelist = [okta_group.mgmt["vault-user"].id]
   scope_whitelist = ["openid", "profile"]
@@ -106,6 +142,7 @@ resource "okta_auth_server_policy_rule" "default" {
 }
 
 resource "okta_app_oauth" "default" {
+  count          = var.create_okta_resources ? 1 : 0
   label          = "HashiCorp Vault OIDC"
   type           = "web"
   grant_types    = ["authorization_code", "implicit", "refresh_token"]
@@ -126,12 +163,14 @@ resource "okta_app_oauth" "default" {
 
 # Assign the vault app to the vault-user group
 resource "okta_app_group_assignment" "default" {
-  app_id   = okta_app_oauth.default.id
+  count    = var.create_okta_resources ? 1 : 0
+  app_id   = okta_app_oauth.default[0].id
   group_id = okta_group.mgmt["vault-user"].id
 }
 
 resource "okta_app_oauth_api_scope" "default" {
-  app_id = okta_app_oauth.default.id
+  count  = var.create_okta_resources ? 1 : 0
+  app_id = okta_app_oauth.default[0].id
   issuer = "https://${var.okta_org_name}.${var.okta_base_url}"
   scopes = ["okta.groups.read", "okta.users.read.self"]
 }

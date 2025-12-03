@@ -10,6 +10,7 @@ module "namespace-root" {
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization
   github_repository     = var.github_repository
+  github_oauth_token    = var.github_oauth_token
   okta_api_token        = var.okta_api_token
   okta_org_name         = var.okta_org_name
   okta_base_url         = var.okta_base_url
@@ -18,9 +19,10 @@ module "namespace-root" {
   tfc_workspace         = "${var.tfc_workspace_prefix}-namespace-root"
   tfc_working_directory = "${var.tfc_working_directory_prefix}/namespace-root"
   tfc_terraform_variables = {
-    "okta_auth_path" = { value = var.okta_auth_path }
-    "okta_org_name"  = { value = var.okta_org_name }
-    "okta_base_url"  = { value = var.okta_base_url }
+    "create_okta_resources" = { value = var.create_okta_resources }
+    "okta_auth_path"        = { value = var.okta_auth_path }
+    "okta_org_name"         = { value = var.okta_org_name }
+    "okta_base_url"         = { value = var.okta_base_url }
   }
   vault_address     = var.vault_address_tfc_agent
   vault_auth_path   = vault_jwt_auth_backend.tfc.path
@@ -29,11 +31,12 @@ module "namespace-root" {
 }
 
 module "namespace-vending" {
-  depends_on            = [module.tfe_oauth_client]
+  depends_on            = [module.tfe_oauth_client, module.namespace-root]
   source                = "./../modules/tfe-workspace"
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization
   github_repository     = var.github_repository
+  github_oauth_token    = var.github_oauth_token
   okta_api_token        = var.okta_api_token
   okta_org_name         = var.okta_org_name
   okta_base_url         = var.okta_base_url
@@ -43,15 +46,17 @@ module "namespace-vending" {
   tfc_workspace         = "${var.tfc_workspace_prefix}-namespace-vending"
   tfc_working_directory = "${var.tfc_working_directory_prefix}/namespace-vending"
   tfc_terraform_variables = {
-    "github_organization" = { value = var.github_organization }
-    "github_repository"   = { value = var.github_repository }
-    "okta_api_token"      = { value = var.okta_api_token, sensitive = true }
-    "okta_org_name"       = { value = var.okta_org_name }
-    "okta_base_url"       = { value = var.okta_base_url }
-    "tfc_organization"    = { value = var.tfc_organization }
-    "tfc_project"         = { value = var.tfc_project }
-    "vault_address"       = { value = var.vault_address_tfc_agent }
-    "vault_auth_path"     = { value = vault_jwt_auth_backend.tfc.path }
+    "github_organization"   = { value = var.github_organization }
+    "github_repository"     = { value = var.github_repository }
+    "github_oauth_token"    = { value = var.github_oauth_token }
+    "create_okta_resources" = { value = var.create_okta_resources }
+    "okta_api_token"        = { value = var.okta_api_token, sensitive = true }
+    "okta_org_name"         = { value = var.okta_org_name }
+    "okta_base_url"         = { value = var.okta_base_url }
+    "tfc_organization"      = { value = var.tfc_organization }
+    "tfc_project"           = { value = var.tfc_project }
+    "vault_address"         = { value = var.vault_address_tfc_agent }
+    "vault_auth_path"       = { value = vault_jwt_auth_backend.tfc.path }
   }
   vault_address     = var.vault_address_tfc_agent
   vault_auth_path   = vault_jwt_auth_backend.tfc.path

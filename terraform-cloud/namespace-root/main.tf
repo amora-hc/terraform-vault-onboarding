@@ -1,9 +1,9 @@
-/*locals {
-  okta_audiences = concat(
-    tolist(data.okta_auth_server.default.audiences),
-    [data.okta_app_oauth.default.client_id]
-  )
-}*/
+locals {
+  okta_audiences = var.create_okta_resources ? concat(
+    tolist(data.okta_auth_server.default["vault"].audiences),
+    [data.okta_app_oauth.default["vault_oidc"].client_id]
+  ) : []
+}
 
 resource "vault_quota_rate_limit" "global" {
   name     = "global"
