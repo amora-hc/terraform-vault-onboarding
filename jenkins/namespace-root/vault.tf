@@ -3,7 +3,7 @@
 #   #  policy = data.vault_policy_document.tfc_admin.hcl
 #   policy = file("${path.module}/../templates/tfc_admin_policy.hcl")
 # }
-/*data "okta_auth_server" "default" {
+data "okta_auth_server" "default" {
   name = "vault"
 }
 
@@ -89,4 +89,4 @@ resource "vault_jwt_auth_backend_role" "okta_group" {
 resource "vault_policy" "okta_vault_admin" {
   name   = "okta-vault-admin"
   policy = file("./${path.module}/../policies/okta_vault_admin_policy.hcl")
-}*/
+}

@@ -21,7 +21,7 @@ resource "vault_quota_lease_count" "namespace" {
 
 # Delegate namespace group admin
 # https://developer.hashicorp.com/vault/tutorials/enterprise/namespaces
-/*data "okta_group" "namespace_admin" {
+data "okta_group" "namespace_admin" {
   name = var.admin_group_name
 }
 data "vault_auth_backend" "okta" {
@@ -50,4 +50,4 @@ resource "vault_identity_group" "namespace_admin_internal" {
   name             = data.okta_group.namespace_admin.name
   member_group_ids = [vault_identity_group.namespace_admin_external.id]
   policies         = [vault_policy.namespace_admin.name]
-}*/
+}

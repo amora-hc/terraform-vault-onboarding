@@ -8,10 +8,12 @@ module "tst_namespace" {
 }
 
 module "tst_workspace" {
+  depends_on            = [module.tst_namespace]
   source                = "./../modules/tfe-workspace"
   enable_tfc_agent_pool = var.enable_tfc_agent_pool
   github_organization   = var.github_organization
   github_repository     = var.github_repository
+  github_oauth_token    = var.github_oauth_token
   okta_api_token        = var.okta_api_token
   okta_org_name         = var.okta_org_name
   okta_base_url         = var.okta_base_url
